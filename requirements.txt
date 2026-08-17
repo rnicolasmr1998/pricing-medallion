@@ -1,0 +1,13 @@
+# --- Núcleo de datos ---
+pandas>=2.0.0
+numpy>=1.24.0
+pyarrow>=14.0.0          # Parquet (bronce, silver, gold)
+fastavro>=1.9.0          # Avro (bronce, crudo de ingesta)
+pandera>=0.32.0          # validación de datos (silver)
+
+# --- Ingesta ---
+requests>=2.31.0         # API Shopify
+
+# --- Data App ---
+streamlit>=1.30.0        # visualización interactiva
+plotly>=5.18.0           # gráficos interactivos

@@ -1,0 +1,39 @@
+# Entorno virtual
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Variables de entorno (contiene valores sensibles)
+.env
+
+# Bronze y silver — grandes y regenerables, no se versionan
+data/bronze/**
+data/silver/**
+
+# Gold SÍ se versiona: GitHub Actions lo actualiza diariamente
+# y Streamlit Cloud lo lee directamente del repo.
+# data/gold/**  ← NO ignorar
+
+# Logs
+logs/*.log
+logs/*.jsonl
+logs/sin_mapear.csv
+
+# Mantener estructura de carpetas vacías
+!data/bronze/.gitkeep
+!data/silver/.gitkeep
+!data/gold/.gitkeep
+!logs/.gitkeep
+
+# IDEs
+.vscode/
+.idea/
+
+# Windows
+Thumbs.db
+desktop.ini
