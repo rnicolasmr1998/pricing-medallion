@@ -38,12 +38,23 @@ import pandera.pandas as pa
 from pandera.pandas import Column, DataFrameSchema, Check
 
 from config.settings import (BRONZE_DIR, SILVER_DIR, CATEGORIAS_MAP_PATH,
-                              SIN_MAPEAR_PATH, TIPO_CAMBIO_USD, TIENDAS_EN_USD)
+                              SIN_MAPEAR_PATH, TIPO_CAMBIO_USD, TIENDAS_EN_USD,
+                              ECRU_CATEGORIAS_PATH)
 from core.transform import parsear_precio_centimos, calcular_descuento, FORMATO_PERUANO
 from core.normalize import cargar_mapa, normalizar, guardar_no_mapeados
 from core.logger import get_logger
 
 log = get_logger("silver")
+
+# Diccionario Ecru cargado desde config/ecru_categorias.json.
+# Para agregar una palabra nueva: editar el JSON y reprocesar con
+# python main.py --solo silver  (sin re-descargar).
+import json as _json
+with open(ECRU_CATEGORIAS_PATH, encoding="utf-8") as _f:
+    ECRU_PALABRA_CATEGORIA: dict[str, str] = {
+        k: v for k, v in _json.load(_f).items()
+        if not k.startswith("_")   # ignora claves de comentario
+    }
 
 
 # --- Esquema de validación (contrato de la capa silver) --------------------
@@ -94,59 +105,6 @@ def _separar_categoria(product_type):
     categoria = partes[0].strip()
     subcategoria = partes[1].strip() if len(partes) > 1 and partes[1].strip() else None
     return (categoria or "NO INDICA"), subcategoria
-
-
-# --- Regla específica de ECRU ----------------------------------------------
-# Ecru no trae product_type: sus productos caen en SIN_CATEGORIA. Pero el
-# título codifica el tipo de prenda en inglés como SEGUNDA palabra:
-#   "WINDSOR BAG"           -> BAG    -> Accesorios
-#   "TEASEL BLOUSE CARAMEL" -> BLOUSE -> Tops
-# Este diccionario traduce esa palabra inglesa a la categoría normalizada.
-# Se usa SOLO para Ecru, como fallback antes de dar SIN_CATEGORIA.
-ECRU_PALABRA_CATEGORIA = {
-    # Blusas
-    "BLOUSE": "Blusas", "SHIRT": "Blusas", "TOP": "Blusas", "TEE": "Blusas",
-    "TSHIRT": "Blusas", "T-SHIRT": "Blusas", "POLO": "Blusas",
-    "CAMISOLE": "Blusas", "BODYSUIT": "Blusas", "BODY": "Blusas",
-    "HALTER": "Blusas", "TANK": "Blusas",
-    # Vestidos & Enterizos
-    "DRESS": "Vestidos & Enterizos", "JUMPSUIT": "Vestidos & Enterizos",
-    "ROMPER": "Vestidos & Enterizos", "OVERALL": "Vestidos & Enterizos",
-    "KAFTAN": "Vestidos & Enterizos",
-    # Pantalones
-    "PANTS": "Pantalones", "PANT": "Pantalones", "TROUSERS": "Pantalones",
-    "JEAN": "Pantalones", "JEANS": "Pantalones",
-    "LEGGINGS": "Pantalones", "CAPRI": "Pantalones",
-    "CULOTTE": "Pantalones", "CULOTTES": "Pantalones",
-    # Faldas
-    "SKIRT": "Faldas",
-    # Shorts
-    "SHORT": "Shorts", "SHORTS": "Shorts",
-    # Abrigos
-    "COAT": "Abrigos", "TRENCH": "Abrigos",
-    "CAPE": "Abrigos", "PONCHO": "Abrigos", "PARKA": "Abrigos",
-    # Sacos & Blazers
-    "BLAZER": "Sacos & Blazers", "VEST": "Sacos & Blazers",
-    # Casacas
-    "JACKET": "Casacas",
-    # Chalecos
-    "GILET": "Chalecos",
-    # Chompas & Cardigans
-    "SWEATER": "Chompas & Cardigans", "CARDIGAN": "Chompas & Cardigans",
-    "KNIT": "Chompas & Cardigans", "PULLOVER": "Chompas & Cardigans",
-    "HOODIE": "Chompas & Cardigans", "SWEATSHIRT": "Chompas & Cardigans",
-    # Carteras
-    "BAG": "Carteras", "CLUTCH": "Carteras", "TOTE": "Carteras",
-    "WALLET": "Carteras",
-    # EXCLUIR: calzado y accesorios varios
-    "SHOES": "EXCLUIR", "SHOE": "EXCLUIR", "BOOT": "EXCLUIR",
-    "BOOTS": "EXCLUIR", "SANDAL": "EXCLUIR", "SANDALS": "EXCLUIR",
-    "HEEL": "EXCLUIR", "HEELS": "EXCLUIR", "FLAT": "EXCLUIR",
-    "FLATS": "EXCLUIR", "SNEAKER": "EXCLUIR", "SNEAKERS": "EXCLUIR",
-    "BELT": "EXCLUIR", "SCARF": "EXCLUIR", "HAT": "EXCLUIR",
-    "NECKLACE": "EXCLUIR", "EARRINGS": "EXCLUIR", "BRACELET": "EXCLUIR",
-    "RING": "EXCLUIR", "GLOVES": "EXCLUIR",
-}
 
 
 def categoria_ecru_desde_titulo(titulo):

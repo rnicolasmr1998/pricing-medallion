@@ -1,0 +1,83 @@
+{
+  "_comentario": "Mapeo de segunda palabra del título de Ecru (en inglés) a categoría normalizada. Agregar palabras nuevas aquí sin tocar silver.py.",
+
+  "BLOUSE": "Blusas",
+  "SHIRT": "Blusas",
+  "TOP": "Blusas",
+  "TEE": "Blusas",
+  "TSHIRT": "Blusas",
+  "T-SHIRT": "Blusas",
+  "POLO": "Blusas",
+  "CAMISOLE": "Blusas",
+  "BODYSUIT": "Blusas",
+  "BODY": "Blusas",
+  "HALTER": "Blusas",
+  "TANK": "Blusas",
+
+  "DRESS": "Vestidos & Enterizos",
+  "JUMPSUIT": "Vestidos & Enterizos",
+  "ROMPER": "Vestidos & Enterizos",
+  "OVERALL": "Vestidos & Enterizos",
+  "KAFTAN": "Vestidos & Enterizos",
+
+  "PANTS": "Pantalones",
+  "PANT": "Pantalones",
+  "TROUSERS": "Pantalones",
+  "JEAN": "Pantalones",
+  "JEANS": "Pantalones",
+  "LEGGINGS": "Pantalones",
+  "CAPRI": "Pantalones",
+  "CULOTTE": "Pantalones",
+  "CULOTTES": "Pantalones",
+
+  "SKIRT": "Faldas",
+
+  "SHORT": "Shorts",
+  "SHORTS": "Shorts",
+
+  "COAT": "Abrigos",
+  "TRENCH": "Abrigos",
+  "CAPE": "Abrigos",
+  "PONCHO": "Abrigos",
+  "PARKA": "Abrigos",
+
+  "BLAZER": "Sacos & Blazers",
+  "VEST": "Sacos & Blazers",
+
+  "JACKET": "Casacas",
+
+  "GILET": "Chalecos",
+
+  "SWEATER": "Chompas & Cardigans",
+  "CARDIGAN": "Chompas & Cardigans",
+  "KNIT": "Chompas & Cardigans",
+  "PULLOVER": "Chompas & Cardigans",
+  "HOODIE": "Chompas & Cardigans",
+  "SWEATSHIRT": "Chompas & Cardigans",
+
+  "BAG": "Carteras",
+  "CLUTCH": "Carteras",
+  "TOTE": "Carteras",
+  "WALLET": "Carteras",
+
+  "SHOES": "EXCLUIR",
+  "SHOE": "EXCLUIR",
+  "BOOT": "EXCLUIR",
+  "BOOTS": "EXCLUIR",
+  "SANDAL": "EXCLUIR",
+  "SANDALS": "EXCLUIR",
+  "HEEL": "EXCLUIR",
+  "HEELS": "EXCLUIR",
+  "FLAT": "EXCLUIR",
+  "FLATS": "EXCLUIR",
+  "SNEAKER": "EXCLUIR",
+  "SNEAKERS": "EXCLUIR",
+  "BELT": "EXCLUIR",
+  "SCARF": "EXCLUIR",
+  "HAT": "EXCLUIR",
+  "NECKLACE": "EXCLUIR",
+  "EARRINGS": "EXCLUIR",
+  "BRACELET": "EXCLUIR",
+  "RING": "EXCLUIR",
+  "GLOVES": "EXCLUIR"
+}

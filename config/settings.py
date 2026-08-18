@@ -17,6 +17,7 @@ SIN_MAPEAR_PATH = os.path.join(LOGS_DIR, "sin_mapear.csv")
 
 CONFIG_DIR = os.path.join(BASE_DIR, "config")
 CATEGORIAS_MAP_PATH = os.path.join(CONFIG_DIR, "categorias_map.csv")
+ECRU_CATEGORIAS_PATH = os.path.join(CONFIG_DIR, "ecru_categorias.json")
 
 for _d in (BRONZE_DIR, SILVER_DIR, GOLD_DIR, LOGS_DIR):
     os.makedirs(_d, exist_ok=True)

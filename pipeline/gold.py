@@ -1,66 +1,66 @@
 """
 CAPA ORO — Agregados que responden las preguntas de negocio.
- 
+
 Todas las preguntas se responden SOLO con datos web (precio, descuento,
 categoría), usando a Michelle Belau (competencia="PROPIA") como punto de
 comparación contra el mercado (DIRECTA + INDIRECTA).
- 
+
 Tablas generadas (en SOLES, para lectura directa en la Data App):
- 
-  1. gold_productos.parquet
-     Detalle a nivel producto de TODAS las tiendas (incluida Michelle Belau),
-     con binning de precio (cuartiles) y de descuento (tramos de negocio).
-     Base del explorador y los filtros.
- 
-  2. gold_benchmark_categoria.parquet
-     Por categoría: precio de Michelle Belau vs. precio del mercado
-     (promedio/min/max de la competencia).
-     -> P1: ¿cómo se posiciona MB frente a la competencia por categoría?
-     -> P2: ¿en qué categorías MB está por encima/debajo del promedio?
- 
-  3. gold_posicionamiento_producto.parquet
-     Cada producto de Michelle Belau ubicado en el rango de precios del mercado
-     de su categoría (posición 0..1, % vs promedio, y si está fuera de rango).
-     -> P3: ¿qué productos de MB están fuera del rango típico del mercado?
- 
-  4. gold_descuentos_tienda.parquet
-     % del catálogo en descuento y descuento promedio por tienda, con MB
-     marcada, para comparar su intensidad promocional con la del mercado.
-     -> P4: ¿MB descuenta más o menos que la competencia?
- 
-  5. gold_dispersion_categoria.parquet
-     Dispersión de precios del mercado por categoría (margen de maniobra).
-     -> P5: ¿qué categorías tienen más dispersión / oportunidad?
- 
+
+1. gold_productos.parquet
+Detalle a nivel producto de TODAS las tiendas (incluida Michelle Belau),
+con binning de precio (cuartiles) y de descuento (tramos de negocio).
+Base del explorador y los filtros.
+
+2. gold_benchmark_categoria.parquet
+Por categoría: precio de Michelle Belau vs. precio del mercado
+(promedio/min/max de la competencia).
+-> P1: ¿cómo se posiciona MB frente a la competencia por categoría?
+-> P2: ¿en qué categorías MB está por encima/debajo del promedio?
+
+3. gold_posicionamiento_producto.parquet
+Cada producto de Michelle Belau ubicado en el rango de precios del mercado
+de su categoría (posición 0..1, % vs promedio, y si está fuera de rango).
+-> P3: ¿qué productos de MB están fuera del rango típico del mercado?
+
+4. gold_descuentos_tienda.parquet
+% del catálogo en descuento y descuento promedio por tienda, con MB
+marcada, para comparar su intensidad promocional con la del mercado.
+-> P4: ¿MB descuenta más o menos que la competencia?
+
+5. gold_dispersion_categoria.parquet
+Dispersión de precios del mercado por categoría (margen de maniobra).
+-> P5: ¿qué categorías tienen más dispersión / oportunidad?
+
 Reglas de binning (documentadas):
-  - rango_precio: cuartiles automáticos (Económico/Medio/Premium/Lujo).
-  - rango_descuento: tramos fijos (Sin descuento/Moderado/Agresivo/Liquidación).
- 
+- rango_precio: cuartiles automáticos (Económico/Medio/Premium/Lujo).
+- rango_descuento: tramos fijos (Sin descuento/Moderado/Agresivo/Liquidación).
+
 Correr: python -m pipeline.gold
 """
- 
+
 import os
 from datetime import date
- 
+
 import numpy as np
 import pandas as pd
- 
+
 from config.settings import SILVER_DIR, GOLD_DIR, TIENDA_PROPIA
 from core.transform import centimos_a_soles
 from core.logger import get_logger
- 
+
 log = get_logger("gold")
- 
+
 ETIQUETAS_PRECIO = ["Económico", "Medio", "Premium", "Lujo"]
 TRAMOS_DESCUENTO = [-0.1, 0, 20, 40, 100]
 ETIQUETAS_DESCUENTO = ["Sin descuento", "Moderado", "Agresivo", "Liquidación"]
- 
- 
+
+
 def _leer_silver_del_dia(fecha: str) -> pd.DataFrame:
     ruta = os.path.join(SILVER_DIR, f"silver_{fecha}.parquet")
     return pd.read_parquet(ruta) if os.path.exists(ruta) else pd.DataFrame()
- 
- 
+
+
 def _tabla_productos(df: pd.DataFrame) -> pd.DataFrame:
     """Detalle por producto (todas las tiendas), en soles, con binning."""
     g = df.copy()

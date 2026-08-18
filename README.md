@@ -14,12 +14,14 @@ las preguntas de negocio.
 ## Objetivo
 
 ### Objetivo principal
+
 Automatizar el monitoreo de precios de la competencia para convertir
 información pública dispersa en un activo de datos estructurado y confiable,
 que habilite decisiones de pricing en Michelle Belau — es decir, fijar precios
 y descuentos con base en el mercado, no por intuición.
 
 ### Objetivos específicos
+
 - **Ingesta automatizada** del catálogo de competidores, con manejo de errores
   y almacenamiento en formatos optimizados.
 - **Equivalencia de categorías**: traducir las categorías de cada competidor a
@@ -53,7 +55,7 @@ este pipeline.
 
 ## Arquitectura medallón
 
-```
+```txt
    FUENTES                BRONCE              PLATA               ORO            DATA APP
  (5 tiendas Shopify)   (bruto, Avro+Parquet)   (limpio, Parquet)  (agregado, Parquet)  (Streamlit)
         |                    |                  |                   |               |
@@ -64,6 +66,7 @@ este pipeline.
 ```
 
 ### Capa BRONCE — `pipeline/bronze.py`
+
 Ingesta **totalmente automatizada** desde la API de cada tienda Shopify
 (`/collections/all/products.json`, paginada). Guarda la respuesta **tal cual**
 (JSON crudo) en formato **Arrow/Feather**, una fila por página con metadatos.
@@ -78,6 +81,7 @@ Ingesta **totalmente automatizada** desde la API de cada tienda Shopify
   abajo sin volver a descargar.
 
 ### Capa PLATA — `pipeline/silver.py`
+
 Limpieza, transformación y validación avanzadas. Produce un dataset limpio,
 tipado y validado en **Parquet**. Transformaciones (documentadas en orden en
 el propio módulo):
@@ -103,6 +107,7 @@ el propio módulo):
    la capa falla y no contamina el análisis.
 
 ### Capa ORO — `pipeline/gold.py`
+
 Agrega el dato limpio en tablas que responden directo las preguntas de
 negocio, **en soles**. Michelle Belau (`PROPIA`) se compara contra el mercado:
 
@@ -123,6 +128,7 @@ Reglas de binning: `rango_precio` por cuartiles (Económico/Medio/Premium/Lujo);
 `rango_descuento` por tramos fijos (Sin descuento/Moderado/Agresivo/Liquidación).
 
 ### Data App — `app/app.py`
+
 Streamlit sobre la capa oro. Filtros (multiselect de tiendas y categorías,
 radio de tipo de competencia, slider de precio, checkbox de solo-descuento),
 4 KPIs, y 3 pestañas: Benchmark por categoría, Descuentos por tienda, y
@@ -141,7 +147,7 @@ donde se leen. Toda columna en céntimos lleva el sufijo `_centimos`.
 
 ## Estructura
 
-```
+```txt
 pricing-medallion/
 ├── main.py                     ← orquestador (bronce → plata → oro)
 ├── requirements.txt

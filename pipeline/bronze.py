@@ -3,13 +3,9 @@ CAPA BRONCE — Ingesta bruta.
 
 Descarga el catálogo de cada tienda Shopify TAL CUAL viene de la API (sin
 transformar) y lo guarda en DOS formatos optimizados:
-  - Avro    (.avro)     -> formato de fila, ideal para el JSON crudo anidado;
-                           esquema autodescriptivo, óptimo para archivar ingesta.
-  - Parquet (.parquet)  -> formato columnar, para releer rápido en la capa silver.
-
-Guardar ambos da lo mejor de dos mundos: Avro preserva fielmente el crudo de
-ingesta (row-based, como llega de la API) y Parquet permite lectura columnar
-eficiente aguas abajo. De cualquiera se puede reconstruir todo sin re-descargar.
+- Avro    (.avro)     -> formato de fila, ideal para el JSON crudo anidado;
+    esquema autodescriptivo, óptimo para archivar ingesta.
+- Parquet (.parquet)  -> formato columnar, para releer rápido en la capa silver.
 
 Cada archivo tiene una fila por página de respuesta, con el JSON crudo como
 texto + metadatos.
